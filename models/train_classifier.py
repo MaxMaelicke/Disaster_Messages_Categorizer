@@ -20,7 +20,6 @@ from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-from sklearn.metrics import classification_report
 
 #from sklearn.multiclass import OneVsRestClassifier
 from xgboost import XGBClassifier
@@ -67,47 +66,50 @@ def tokenize(text):
     return clean_tokens
 
 
-#from build_model import build_model
+from build_model import build_model
+'''
 def build_model():
     pipeline = Pipeline([
             ('features', FeatureUnion([
                     ('text_pipeline', Pipeline([
-                            ('vect', CountVectorizer(tokenizer=tokenize, ngram_range = (1,2), max_df = 0.9)),
-                            ('tfidf', TfidfTransformer(use_idf = False))
+                            ('vect', CountVectorizer(tokenizer=tokenize)),
+                            ('tfidf', TfidfTransformer())
                             ]))
                     # space for second pipeline
                     ])),
-            ('clf', MultiOutputClassifier(XGBClassifier(max_depth = 7, subsample = 0.75)))
+            ('clf', MultiOutputClassifier(RandomForestClassifier()))    # RandomForestClassifier
+            #('clf', MultiOutputClassifier(XGBClassifier()))            # XGBoost Classifier
             ])
 
     # Grid search
-    '''
-    # parameters for grid search
+    # RandomForest grid search params
     parameters = {
-        #'features__text_pipeline__vect__ngram_range': ((1, 2)),
-        'features__text_pipeline__vect__max_df': (0.9, 1.0),
-        #'features__text_pipeline__vect__max_features': (None),
-        #'features__text_pipeline__tfidf__use_idf': (False),
+        #'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),
+        #'features__text_pipeline__vect__max_df': (0.5, 0.75, 1.0),
+        #'features__text_pipeline__vect__max_features': (None, 5000, 10000),
+        #'features__text_pipeline__tfidf__use_idf': (True, False),
         'clf__estimator__max_depth': [6, 7],
-        'clf__estimator__subsample': [0.5, 0.75]
+        'clf__estimator__min_samples_split': [3, 4]
         }
 
-    # Initial grid search params
-    parameters = {
-        'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),
-        'features__text_pipeline__vect__max_df': (0.5, 0.75, 1.0),
-        'features__text_pipeline__vect__max_features': (None, 5000, 10000),
-        'features__text_pipeline__tfidf__use_idf': (True, False),
-        'clf__estimator__max_depth': [5, 6],
-        'clf__estimator__subsample': [0.5, 1]
-        }
+    # XGBoost grid search params
+    #parameters = {
+    #    'features__text_pipeline__vect__ngram_range': ((1, 1), (1, 2)),
+    #    'features__text_pipeline__vect__max_df': (0.5, 0.75, 1.0),
+    #    'features__text_pipeline__vect__max_features': (None, 5000, 10000),
+    #    'features__text_pipeline__tfidf__use_idf': (True, False),
+    #    'clf__estimator__max_depth': [5, 6, 7],
+    #    'clf__estimator__subsample': [0.5, 0.75, 1]
+    #    }
+
 
     # create grid search object
     model = GridSearchCV(pipeline, param_grid = parameters, cv = 3, n_jobs = -1)
-    '''
-    model = pipeline
+
+    #model = pipeline
 
     return model
+'''
 
 def evaluate_model(model, X_test, y_test):
     y_pred = model.predict(X_test)
@@ -119,7 +121,7 @@ def evaluate_model(model, X_test, y_test):
         print(col)
         print(classification_report(y_test[col], y_pred[:, i]))
 
-    #print("\nBest Parameters:", model.best_params_)
+    print("\nBest Parameters:", model.best_params_)
 
 
 def save_model(model, model_filepath = 'model.pkl'):
