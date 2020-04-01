@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0;" />
+
+
+        <title>maelicke.net | Disaster Messages Categorizer</title>
+
+        </head>
+
+        <body>
+
+          <!--import script files needed from plotly -->
+          <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+          <!-- Bootstrap CSS -->
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+            <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e2e2e2;">
+                <a class="navbar-brand" href="https://www.maelicke.net">maelicke.net</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                  <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                      <a class="nav-link" href="https://www.maelicke.net">Home</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Data Science References
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="https://medium.com/@max_58709/is-gdp-a-meaningful-measure-for-the-well-being-of-a-country-and-its-citizens-283aa23130f9">World Indicators Article</a>
+                        <a class="dropdown-item" href="https://covid.maelicke.net>COVID-19 Dashboard</a>
+                        <a class="dropdown-item" href="#">Disaster Messages Categorizer</a>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+
+
+              <!-- Optional JavaScript -->
+              <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+              <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+              <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+              <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+            <!--visualizations column-->
+            <div class="col-12">
+
+
+                    <div class="container">
+                      <ul></ul>
+                      <h3 id="tag-line" class="text-center">Disaster Messages Categorizer</h3>
+                      <h5 id="tag-line" class="text-muted, text-center">Analyzing message data for disaster response</h5>
+  		                <p class="text-muted, text-center">Made with Udacity and data by Figure Eight</p>
+                        <hr />
+
+                        <div class="row">
+                            <div class="col-lg-12 form-group-lg">
+                                <form action="/go" method="get">
+                                    <input type="text" class="form-control form-control-lg" name="query" placeholder="Enter a message">
+                                    <div class="col-lg-offset-5">
+                                      <ul></ul>
+                                        <button type="submit" class="btn btn-lg btn-success">Categorize Message</button>
+                                      <ul></ul>
+                                    </div>
+                                </form>
+
+                        </div>
+
+                        {% block message %}
+                        {% endblock %}
+                    </div>
+                </div>
+
+                <div class="container">
+                    {% block content %}
+                        <div class="page-header">
+                            <h3 class="text-center">Overview of Training Dataset</h3>
+                        </div>
+                    {% endblock %}
+
+                    {% for id in ids %}
+                        <div id="{{id}}"></div>
+                    {% endfor %}
+                </div>
+
+        </div>
+
+        <!--footer section-->
+	<ul></ul>
+	<ul></ul>
+        <div id="footer" class="container">
+          <p>The training data for the model was provided by <a href="https://www.figure-eight.com/" target="_blank">Figure Eight</a>. This project was conducted in the course of my Data Scientist Nanodegree at <a href="https://www.udacity.com/" target="_blank">Udacity</a>. Source code can be accessed on my <a href="https://github.com/MaxMaelicke/COVID-19_Dashboard" target="_blank">Github project</a>.</p>
+
+        </div>
+
+        </body>
+
+
+        <footer>
+
+            <script type="text/javascript">
+                // plots the figure with id
+                // id much match the div id above in the html
+                var figures = {{figuresJSON | safe}};
+                var ids = {{ids | safe}};
+                for(var i in figures) {
+                    Plotly.plot(ids[i],
+                        figures[i].data,
+                        figures[i].layout || {});
+                }
+            </script>
+
+        </footer>
+
+
+</html>

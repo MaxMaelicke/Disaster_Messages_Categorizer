@@ -1,14 +1,14 @@
-{% extends "master.html" %}
+{% extends "index.html" %}
 {% block title %}Results{% endblock %}
 
 {% block message %}
     <hr />
-    <h4 class="text-center">MESSAGE</h4>
+    <h3 class="text-center">Message: </h3>
     <p class="text-center"><i>{{query}}</i></p>
 {% endblock %}
 
 {% block content %}
-    <h1 class="text-center">Result</h1>
+    <h4 class="text-center">Content Categories</h4>
         <ul class="list-group">
             {% for category, classification in classification_result.items() %}
                 {% if classification == 1 %}
