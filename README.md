@@ -21,10 +21,10 @@ As classifier in the machine learning pipeline either the XGBoost Classifier (de
 
 
 ## Previews
-Main webpage with graphs about the trainig datasets
+### Main webpage with graphs about the trainig datasets
 ![main webpage](/screenshots/screenshot1.png?raw=true "main webpage")
 
-Result from the classifier
+### Result from the classifier
 ![category results](/screenshots/screenshot2.png?raw=true "results")
 
 
