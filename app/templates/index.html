@@ -3,8 +3,6 @@
     <head>
         <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0;" />
-
-
         <title>maelicke.net | Disaster Messages Categorizer</title>
 
         </head>
@@ -35,8 +33,8 @@
                       </a>
                       <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="https://medium.com/@max_58709/is-gdp-a-meaningful-measure-for-the-well-being-of-a-country-and-its-citizens-283aa23130f9">World Indicators Article</a>
-                        <a class="dropdown-item" href="https://covid.maelicke.net>COVID-19 Dashboard</a>
-                        <a class="dropdown-item" href="#">Disaster Messages Categorizer</a>
+                        <a class="dropdown-item" href="https://covid.maelicke.net">COVID-19 Dashboard</a>
+                        <a class="dropdown-item" href="/">Disaster Messages Categorizer</a>
                       </div>
                     </li>
                   </ul>
@@ -83,7 +81,7 @@
                 <div class="container">
                     {% block content %}
                         <div class="page-header">
-                            <h3 class="text-center">Overview of Training Dataset</h3>
+                            <h4 class="text-center">Distribution of Training Dataset</h4>
                         </div>
                     {% endblock %}
 
@@ -107,17 +105,13 @@
 
         <footer>
 
-            <script type="text/javascript">
-                // plots the figure with id
-                // id much match the div id above in the html
-                var figures = {{figuresJSON | safe}};
-                var ids = {{ids | safe}};
-                for(var i in figures) {
-                    Plotly.plot(ids[i],
-                        figures[i].data,
-                        figures[i].layout || {});
-                }
-            </script>
+          <script type="text/javascript">
+              const graphs = {{graphJSON | safe}};
+              const ids = {{ids | safe}};
+              for(let i in graphs) {
+                  Plotly.plot(ids[i], graphs[i].data, graphs[i].layout);
+              }
+          </script>
 
         </footer>
 

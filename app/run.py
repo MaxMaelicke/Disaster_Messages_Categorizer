@@ -1,5 +1,6 @@
 import json
 import plotly
+import numpy as np
 import pandas as pd
 
 import re
@@ -50,13 +51,25 @@ model = joblib.load("../models/classifier.pkl")
 def index():
 
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
+    # graph one - Distribution of Message Genres
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+    # graph two - Categories per Message
+    msg_counts = df.iloc[:, 4:]
+    msg_counts = msg_counts[msg_counts > 0].count(axis = 1)
+    cat_counts, msgs = np.unique(msg_counts, return_counts=True)
+    cat_counts = list(cat_counts)
+    msgs = list(msgs)
+    # graph three - Messages per Category
+    class_counts = df.iloc[:, 4:]
+    class_counts = class_counts[class_counts > 0].count().sort_values(ascending = False)
+    class_names = [x.replace('_', ' ') for x in list(class_counts.index)]
+    class_counts = list(class_counts.values)
 
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
+        # graph one - Distribution of Message Genres
         {
             'data': [
                 Bar(
@@ -64,14 +77,49 @@ def index():
                     y=genre_counts
                 )
             ],
-
             'layout': {
                 'title': 'Distribution of Message Genres',
                 'yaxis': {
-                    'title': "Count"
+                    'title': "Message Count"
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        # graph two - Categories per Message
+        {
+            'data': [
+                Bar(
+                    x=cat_counts,
+                    y=msgs
+                )
+            ],
+            'layout': {
+                'title': 'Categories per Message',
+                'yaxis': {
+                    'title': "Message Count"
+                },
+                'xaxis': {
+                    'title': "Categories per Message"
+                }
+            }
+        },
+        # graph three - Messages per Category
+        {
+            'data': [
+                Bar(
+                    x=class_names,
+                    y=class_counts
+                )
+            ],
+            'layout': {
+                'title': 'Distribution of Message Genres',
+                'yaxis': {
+                    'title': "Message Count"
+                },
+                'xaxis': {
+                    'title': "Category"
                 }
             }
         }
