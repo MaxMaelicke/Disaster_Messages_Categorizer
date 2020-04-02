@@ -8,9 +8,11 @@ As classifier in the machine learning pipeline either the XGBoost Classifier (de
 ## Instructions
 1. Run the following commands in the project's root directory to set up your database and model.
 
-    - To run ETL pipeline that cleans data and stores in database
+    - Either unzip models/classifier.zip (trained XGBoost model), or:
+
+    - Run ETL pipeline that cleans data and stores in database,
         `python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db`
-    - To run ML pipeline that trains classifier and saves
+    - Run ML pipeline that trains classifier and saves
         `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
         Optional: In build_model.py you can choose between XGBoost and RandomForest Classifier
 
