@@ -1,5 +1,6 @@
 jupyter_notebooks/
 models/Archiv/
+models/classifier.pkl
 .DS_Store
 
 
