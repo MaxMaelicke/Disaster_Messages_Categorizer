@@ -21,16 +21,22 @@ from xgboost import XGBClassifier
 import xgboost as xgb
 
 
-url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
-
 def tokenize(text):
+    '''
+    Process text data (messages) into ML ready tokens
+    Input:  text = DataFrame with text messages
+    Output: clean_tokens = list of processed tokens
+    '''
+    # Detect and replace URLs
+    url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     detected_urls = re.findall(url_regex, text)
     for url in detected_urls:
         text = text.replace(url, "urlplaceholder")
-
+    # tokenize --> tranform sentence into list of words (tokens)
     tokens = word_tokenize(text)
+    # lemmatize --> tranform words into word "stem" (e. g. is, was --> be)
     lemmatizer = WordNetLemmatizer()
-
+    # remove unimportant "stop" words (e.g. the, this, at)
     stop_words = stopwords.words('english')
     tokens = [t for t in tokens if t not in stop_words]
 
@@ -43,6 +49,11 @@ def tokenize(text):
 
 
 def build_model():
+    '''
+    Build ML model with Scikit-Learn's Pipeline function and optimize model parameters with GridSearch
+    By uncommenting and commenting the 'clf' lines you can use either a RandomForest Classifier or the XGBoost Classifier. Make sure to also uncomment and comment the appropriate grid search parameters.
+    Output: model = model pipeline
+    '''
     pipeline = Pipeline([
             ('features', FeatureUnion([
                     ('text_pipeline', Pipeline([

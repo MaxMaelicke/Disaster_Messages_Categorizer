@@ -4,8 +4,11 @@ import numpy as np
 import pandas as pd
 
 import re
-from nltk.stem import WordNetLemmatizer
+import nltk
+nltk.download(['punkt', 'wordnet', 'stopwords'])
 from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
 
 from flask import Flask
 from flask import render_template, request, jsonify
@@ -22,13 +25,23 @@ app = Flask(__name__)
 
 
 def tokenize(text):
+    '''
+    Process text data (messages) into ML ready tokens
+    Input:  text = DataFrame with text messages
+    Output: clean_tokens = list of processed tokens
+    '''
+    # Detect and replace URLs
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     detected_urls = re.findall(url_regex, text)
     for url in detected_urls:
         text = text.replace(url, "urlplaceholder")
-
+    # tokenize --> tranform sentence into list of words (tokens)
     tokens = word_tokenize(text)
+    # lemmatize --> tranform words into word "stem" (e. g. is, was --> be)
     lemmatizer = WordNetLemmatizer()
+    # remove unimportant "stop" words (e.g. the, this, at)
+    stop_words = stopwords.words('english')
+    tokens = [t for t in tokens if t not in stop_words]
 
     clean_tokens = []
     for tok in tokens:
@@ -45,11 +58,13 @@ df = pd.read_sql_table('df', engine)
 model = joblib.load("../models/classifier.pkl")
 
 
-# index webpage displays cool visuals and receives user input text for model
 @app.route('/')
 @app.route('/index')
 def index():
-
+    '''
+    Render index.html webpage and create bar charts about the training dataset with Plotly
+    The webpage also receives the user's input text for the classification model
+    '''
     # extract data needed for visuals
     # graph one - Distribution of Message Genres
     genre_counts = df.groupby('genre').count()['message']
@@ -133,9 +148,11 @@ def index():
     return render_template('index.html', ids=ids, graphJSON=graphJSON)
 
 
-# web page that handles user query and displays model results
 @app.route('/go')
 def go():
+    '''
+    Render go.html webpage which handles the user query and displays the classification model results
+    '''
     # save user input in query
     query = request.args.get('query', '')
 
